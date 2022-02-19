@@ -3,7 +3,8 @@ import { View, Text, Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Wellcome from "./src/views/wellcome/Wellcome.screen.js";
+import Wellcome from "./src/views/wellcome/Wellcome.screen.jsx";
+import Home from "./src/views/Home/Home.screen.jsx";
 
 function HomeScreen({ navigation }) {
   return (
@@ -12,18 +13,6 @@ function HomeScreen({ navigation }) {
       <Button
         title="Go to Profile"
         onPress={() => navigation.navigate("Profile")}
-      />
-    </View>
-  );
-}
-
-function ProfileScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Profile Screen</Text>
-      <Button
-        title="Go to Profile"
-        onPress={() => navigation.navigate("Home")}
       />
     </View>
   );
@@ -41,8 +30,8 @@ function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
+          name="Home"
+          component={Home}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

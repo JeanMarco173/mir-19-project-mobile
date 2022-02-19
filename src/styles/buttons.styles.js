@@ -15,6 +15,13 @@ const primaryButtonStyle = StyleSheet.create({
     fontWeight: "700",
     color: "#254A5A",
   },
+
+  text__center: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#254A5A",
+    textAlign: "center",
+  },
 });
 
 export { primaryButtonStyle };
