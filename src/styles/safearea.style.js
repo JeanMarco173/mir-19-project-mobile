@@ -8,4 +8,6 @@ const styles = StyleSheet.create({
   },
 });
 
+//backgroundColor: "#F2F2F2",
+
 export default styles;

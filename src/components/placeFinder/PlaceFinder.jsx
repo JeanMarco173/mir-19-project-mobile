@@ -1,0 +1,71 @@
+import React, { useEffect, useState } from "react";
+import { View, Text, TextInput, ScrollView } from "react-native";
+import AddressCard from "../addressCard/AddressCard.jsx";
+import { findPlace, getPlaceDetail } from "../../api/googleAPI.js";
+
+import styles from "./placefinder.style.js";
+import textStyle from "../../styles/text.styles.js";
+
+const FindAddress = (props) => {
+  const { setPlace } = props;
+  const [placeSelected, setPlaceSelected] = useState(null);
+  const [queryPlace, setQueryPlace] = useState("");
+  const [places, setPlaces] = useState([]);
+  const [messageError, setMessageError] = useState("");
+
+  useEffect(() => {
+    const findPlaceAPI = async () => {
+      if (queryPlace.length > 2) {
+        const response = await findPlace(queryPlace);
+        if (typeof response === "object") setPlaces(response);
+        else setMessageError(response);
+      } else if (queryPlace.length === 0) {
+        if (places.length > 0) setPlaces([]);
+      }
+    };
+    findPlaceAPI();
+  }, [queryPlace]);
+
+  useEffect(() => {
+    if (placeSelected) {
+      const getPlace = async () => {
+        const response = await getPlaceDetail(placeSelected.place_id);
+        const address = {
+          name: response.name,
+          location: response.geometry.location,
+        };
+        setPlace(address);
+      };
+      getPlace();
+    }
+  }, [placeSelected]);
+
+  return (
+    <View>
+      <Text style={textStyle.sub__title}>Buscar dirección</Text>
+      <TextInput
+        style={styles.finder__input}
+        placeholder="Buscar"
+        onChangeText={(query) => setQueryPlace(query)}
+      ></TextInput>
+      <View style={styles.places__container}>
+        {places.length ? (
+          <ScrollView style={styles.places__scroll}>
+            {places.map((item, index) => (
+              <AddressCard
+                origin="Finder"
+                key={index}
+                selectPlace={setPlaceSelected}
+                address={item}
+              />
+            ))}
+          </ScrollView>
+        ) : (
+          <Text>{queryPlace !== "" ? messageError : ""}</Text>
+        )}
+      </View>
+    </View>
+  );
+};
+
+export default FindAddress;
