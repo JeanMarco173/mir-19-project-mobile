@@ -11,24 +11,34 @@ import { useDisclose } from "native-base";
 import PlaceFinder from "../../components/placeFinder/PlaceFinder.jsx";
 import AddressCard from "../../components/addressCard/AddressCard.jsx";
 import AlertDialog from "../../components/alertDialog/AlertDialog.jsx";
+import { useDispatch } from "react-redux";
+import { setAddressFrom } from "../../store/addressFrom/addressfrom.slice.js";
 
 import styles from "./findadress.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";
 import textStyle from "../../styles/text.styles.js";
 
 const FindAddress = () => {
+  const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclose();
 
   const [address, setAddress] = useState(null);
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(null);
+
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    onOpen();
+    if (address) {
+      setMessage(`La dirección que ha seleccionado es: ${address.name}`);
+      onOpen();
+    }
   }, [address]);
 
   useEffect(() => {
     if (isValid) {
-      console.log(address);
+      dispatch(setAddressFrom(address));
+    } else {
+      setAddress(null);
     }
   }, [isValid]);
 
@@ -57,8 +67,8 @@ const FindAddress = () => {
         isOpen={isOpen}
         onClose={onClose}
         setResult={setIsValid}
-        message="Esta seguro que desea setear esta direccion este texto va ser mas largo"
         title="Confirmar dirección"
+        message={message}
       ></AlertDialog>
     </SafeAreaView>
   );

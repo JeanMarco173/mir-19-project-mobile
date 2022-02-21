@@ -8,7 +8,6 @@ import textStyle from "../../styles/text.styles.js";
 
 const FindAddress = (props) => {
   const { setPlace } = props;
-  const [placeSelected, setPlaceSelected] = useState(null);
   const [queryPlace, setQueryPlace] = useState("");
   const [places, setPlaces] = useState([]);
   const [messageError, setMessageError] = useState("");
@@ -26,19 +25,14 @@ const FindAddress = (props) => {
     findPlaceAPI();
   }, [queryPlace]);
 
-  useEffect(() => {
-    if (placeSelected) {
-      const getPlace = async () => {
-        const response = await getPlaceDetail(placeSelected.place_id);
-        const address = {
-          name: response.name,
-          location: response.geometry.location,
-        };
-        setPlace(address);
-      };
-      getPlace();
-    }
-  }, [placeSelected]);
+  const getPlace = async (place) => {
+    const response = await getPlaceDetail(place.place_id);
+    const address = {
+      name: response.name,
+      location: response.geometry.location,
+    };
+    setPlace(address);
+  };
 
   return (
     <View>
@@ -55,7 +49,7 @@ const FindAddress = (props) => {
               <AddressCard
                 origin="Finder"
                 key={index}
-                selectPlace={setPlaceSelected}
+                selectPlace={getPlace}
                 address={item}
               />
             ))}
