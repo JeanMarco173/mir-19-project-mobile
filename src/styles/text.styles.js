@@ -23,7 +23,13 @@ const styles = StyleSheet.create({
   sub__title: {
     color: "#276C91",
     fontSize: 18,
-    fontWeight: Platform === "ios" ? "700" : "bold",
+    fontWeight: Platform.OS === "ios" ? "700" : "bold",
+  },
+
+  label__title: {
+    color: "#276C91",
+    fontSize: 18,
+    fontWeight: Platform.OS === "ios" ? "800" : "bold",
   },
 
   help__text: {

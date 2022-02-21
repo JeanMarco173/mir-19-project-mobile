@@ -18,7 +18,7 @@ import textStyle from "../../styles/text.styles.js";
 const Home = () => {
   const [addresses, setAddresses] = useState([]);
   return (
-    <SafeAreaView style={safeareaStyle.android__safearea}>
+    <SafeAreaView style={safeareaStyle.container}>
       <View style={styles.main__container}>
         <TouchableOpacity style={styles.move__house__button}>
           <View style={styles.move__house__icon__container}>

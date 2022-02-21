@@ -14,19 +14,19 @@ const styles = StyleSheet.create({
   title__header: {
     color: "#254A5A",
     fontSize: 18,
-    fontWeight: Platform === "ios" ? "700" : "bold",
+    fontWeight: Platform.OS === "ios" ? "700" : "bold",
   },
 
   cancel__button: {
     color: "#254A5A",
     fontSize: 18,
-    fontWeight: Platform === "ios" ? "700" : "bold",
+    fontWeight: Platform.OS === "ios" ? "700" : "bold",
   },
 
   cancel__text: {
     color: "#FFCC7F",
     fontSize: 16,
-    fontWeight: Platform === "ios" ? "700" : "bold",
+    fontWeight: Platform.OS === "ios" ? "700" : "bold",
   },
 
   body__container: {
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   body__text: {
     color: "#000000",
     fontSize: 18,
-    fontWeight: Platform === "ios" ? "600" : "normal",
+    fontWeight: Platform.OS === "ios" ? "600" : "normal",
     textAlign: "center",
   },
 
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   action__text: {
     color: "#FFCC7F",
     fontSize: 20,
-    fontWeight: Platform === "ios" ? "700" : "bold",
+    fontWeight: Platform.OS === "ios" ? "700" : "bold",
   },
 });
 

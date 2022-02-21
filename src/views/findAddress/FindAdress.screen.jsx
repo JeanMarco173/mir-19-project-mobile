@@ -12,14 +12,18 @@ import PlaceFinder from "../../components/placeFinder/PlaceFinder.jsx";
 import AddressCard from "../../components/addressCard/AddressCard.jsx";
 import AlertDialog from "../../components/alertDialog/AlertDialog.jsx";
 import { useDispatch } from "react-redux";
-import { setAddressFrom } from "../../store/addressFrom/addressfrom.slice.js";
+import {
+  setOrigin,
+  setDestiny,
+} from "../../store/requestService/requestservice.slice.js";
 
 import styles from "./findadress.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";
 import textStyle from "../../styles/text.styles.js";
 
-const FindAddress = () => {
+const FindAddress = ({ route, navigation }) => {
   const dispatch = useDispatch();
+  const screenOrigin = route.params.origin;
   const { isOpen, onOpen, onClose } = useDisclose();
 
   const [address, setAddress] = useState(null);
@@ -36,16 +40,18 @@ const FindAddress = () => {
 
   useEffect(() => {
     if (isValid) {
-      dispatch(setAddressFrom(address));
+      if (screenOrigin === "addressFrom") dispatch(setOrigin(address));
+      if (screenOrigin === "addressTo") dispatch(setDestiny(address));
+      navigation.goBack();
     } else {
       setAddress(null);
     }
   }, [isValid]);
 
   return (
-    <SafeAreaView style={safeareaStyle.android__safearea}>
+    <SafeAreaView style={safeareaStyle.container}>
       <View style={styles.header__container}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesome name="close" size={24} color="#254A5A" />
         </TouchableOpacity>
         <Text style={textStyle.header__text}>Dirección</Text>

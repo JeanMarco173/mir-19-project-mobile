@@ -28,7 +28,7 @@ const FindAddress = (props) => {
   const getPlace = async (place) => {
     const response = await getPlaceDetail(place.place_id);
     const address = {
-      name: response.name,
+      name: response.formatted_address,
       location: response.geometry.location,
     };
     setPlace(address);

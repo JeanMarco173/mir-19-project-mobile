@@ -40,7 +40,7 @@ const Wellcome = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={safeareaStyle.android__safearea}>
+    <SafeAreaView style={safeareaStyle.container}>
       <View style={styles.header__container}>
         <PresenceTransition
           visible={isVisible}

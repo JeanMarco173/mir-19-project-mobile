@@ -8,18 +8,37 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Wellcome from "./src/views/wellcome/Wellcome.screen.jsx";
 import Home from "./src/views/home/Home.screen.jsx";
 import FindAddress from "./src/views/findAddress/FindAdress.screen.jsx";
+import RequestServiceForm from "./src/views/requestService/RequestService.screen.jsx";
 
 const Stack = createNativeStackNavigator();
 
+function RequestServiceStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="RequestServiceForm"
+        component={RequestServiceForm}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="FindAddress"
+        component={FindAddress}
+        options={{ headerShown: false }}
+        initialParams={{ origin: "" }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function App() {
   return (
-    <NavigationContainer>
-      <NativeBaseProvider>
+    <NativeBaseProvider>
+      <NavigationContainer>
         <Provider store={store}>
           <Stack.Navigator>
             <Stack.Screen
-              name="FindAddress"
-              component={FindAddress}
+              name="RequestServiceStack"
+              component={RequestServiceStack}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -29,8 +48,8 @@ function App() {
             />
           </Stack.Navigator>
         </Provider>
-      </NativeBaseProvider>
-    </NavigationContainer>
+      </NavigationContainer>
+    </NativeBaseProvider>
   );
 }
 
