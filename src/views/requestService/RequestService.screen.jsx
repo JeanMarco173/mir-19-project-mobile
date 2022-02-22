@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -9,9 +9,17 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
+import { useDisclose } from "native-base";
 import { FontAwesome } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { setRequestService } from "../../store/requestService/requestservice.slice.js";
+import {
+  setDate,
+  setHour,
+  setDetail,
+} from "../../store/requestService/requestservice.slice.js";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import AlertDialog from "../../components/alertDialog/AlertDialog.jsx";
+import moment from "moment";
 
 import styles from "./requestservice.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";
@@ -21,9 +29,65 @@ import textStyle from "../../styles/text.styles.js";
 
 const RequestServiceForm = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { origin, destiny, date, paymentMethod, detail } = useSelector(
+  const { origin, destiny, date, hour, detail } = useSelector(
     (state) => state.requestService
   );
+  const { isOpen, onOpen, onClose } = useDisclose();
+  const [datePicker, setDatePicker] = useState(new Date());
+  const [hourPicker, setHourPicker] = useState(new Date());
+  const [show, setShow] = useState(false);
+  const [isDateValid, setIsDateValid] = useState(null);
+  const [isHourValid, setIsHourValid] = useState(null);
+  const [pickerType, setPickerType] = useState("date");
+
+  /**
+   * Set date to request
+   */
+
+  const selectDate = (event, selectedDate) => {
+    const currentDate = selectedDate || datePicker;
+    setDatePicker(currentDate);
+    setShow(false);
+  };
+
+  useEffect(() => {
+    if (!isDateValid && date !== "") dispatch(setDate(""));
+  }, [isDateValid]);
+
+  useEffect(() => {
+    dispatch(setDate(moment(datePicker).format("YYYY-MM-DD")));
+  }, [datePicker]);
+
+  /**
+   * Set hour to request
+   */
+
+  const selectHour = (event, selectedDate) => {
+    const currentDate = selectedDate || hourPicker;
+    setHourPicker(currentDate);
+    setShow(false);
+  };
+
+  useEffect(() => {
+    if (!isDateValid && hour !== "") dispatch(setHour(""));
+  }, [isHourValid]);
+
+  useEffect(() => {
+    dispatch(setHour(moment(hourPicker).format("HH:mm")));
+  }, [hourPicker]);
+
+  /**
+   * requestService
+   */
+
+  const goToResume = () => {
+    if (origin && destiny && date && hour && detail) {
+      console.log("todo en orden");
+    } else {
+      console.log("cuidado marico, no esta en orden");
+    }
+  };
+
   return (
     <SafeAreaView style={safeareaStyle.container__light}>
       <View style={headerStyle.container}>
@@ -78,17 +142,41 @@ const RequestServiceForm = ({ navigation }) => {
             </View>
             <View style={styles.input__form__container}>
               <Text style={textStyle.label__title}>Fecha</Text>
-              <TouchableOpacity style={styles.input__form__button}>
-                <Text style={styles.input__form__text__placeholder}>
-                  Fecha del envío
+              <TouchableOpacity
+                style={styles.input__form__button}
+                onPress={() => {
+                  setPickerType("date");
+                  Platform.OS === "ios" ? onOpen() : setShow(true);
+                }}
+              >
+                <Text
+                  style={
+                    date
+                      ? styles.input__form__text
+                      : styles.input__form__text__placeholder
+                  }
+                >
+                  {date ? date : "Fecha del envío"}
                 </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.input__form__container}>
-              <Text style={textStyle.label__title}>Método de pago</Text>
-              <TouchableOpacity style={styles.input__form__button}>
-                <Text style={styles.input__form__text__placeholder}>
-                  Método de pago
+              <Text style={textStyle.label__title}>Hora</Text>
+              <TouchableOpacity
+                style={styles.input__form__button}
+                onPress={() => {
+                  setPickerType("time");
+                  Platform.OS === "ios" ? onOpen() : setShow(true);
+                }}
+              >
+                <Text
+                  style={
+                    hour
+                      ? styles.input__form__text
+                      : styles.input__form__text__placeholder
+                  }
+                >
+                  {hour ? hour : "Hora"}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -99,16 +187,49 @@ const RequestServiceForm = ({ navigation }) => {
                 multiline={true}
                 style={styles.input__area__form}
                 placeholder="Detalle del envío"
+                onChangeText={(text) => dispatch(setDetail(text))}
               />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
         <View style={styles.action__container}>
-          <TouchableOpacity style={primaryButtonStyle.container}>
+          <TouchableOpacity
+            style={primaryButtonStyle.container}
+            onPress={goToResume}
+          >
             <Text style={primaryButtonStyle.text__center}>Siguiente</Text>
           </TouchableOpacity>
         </View>
       </View>
+      {Platform.OS === "ios" ? (
+        <AlertDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          setResult={pickerType === "date" ? setIsDateValid : setIsHourValid}
+          title="Seleccione una fecha"
+          body={
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={pickerType === "date" ? datePicker : hourPicker}
+              mode={pickerType}
+              is24Hour={true}
+              display="spinner"
+              onChange={pickerType === "date" ? selectDate : selectHour}
+            />
+          }
+        />
+      ) : (
+        show && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={pickerType === "date" ? datePicker : hourPicker}
+            mode={pickerType}
+            is24Hour={true}
+            display="spinner"
+            onChange={pickerType === "date" ? selectDate : selectHour}
+          />
+        )
+      )}
     </SafeAreaView>
   );
 };
