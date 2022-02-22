@@ -15,12 +15,16 @@ import safeareaStyle from "../../styles/safearea.style.js";
 import { primaryButtonStyle } from "../../styles/buttons.styles.js";
 import textStyle from "../../styles/text.styles.js";
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const [addresses, setAddresses] = useState([]);
+  const goToRequestService = () => navigation.navigate("RequestServiceStack");
   return (
     <SafeAreaView style={safeareaStyle.container}>
       <View style={styles.main__container}>
-        <TouchableOpacity style={styles.move__house__button}>
+        <TouchableOpacity
+          style={styles.move__house__button}
+          onPress={goToRequestService}
+        >
           <View style={styles.move__house__icon__container}>
             <Image
               style={styles.move__house__icon}
@@ -37,7 +41,10 @@ const Home = () => {
           <ShipCard date="22/02/2022" price="22.00" vehicleType="van" />
         </View>
         <View style={styles.request__ship__container}>
-          <TouchableOpacity style={primaryButtonStyle.container}>
+          <TouchableOpacity
+            style={primaryButtonStyle.container}
+            onPress={goToRequestService}
+          >
             <Text style={primaryButtonStyle.text__center}>
               Cotiza un traslado
             </Text>

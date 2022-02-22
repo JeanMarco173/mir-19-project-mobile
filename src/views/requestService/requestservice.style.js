@@ -1,11 +1,5 @@
 import { StyleSheet, Dimensions, Platform } from "react-native";
 const bodyHeight = Dimensions.get("screen").height - 60;
-const avoidingViewAndroid = bodyHeight - 300;
-const avoidingViewIos = bodyHeight - 200;
-
-/* console.log("bodyHeight", bodyHeight);
-console.log("avoidingViewAndroid", avoidingViewAndroid);
-console.log("avoidingViewIos", avoidingViewIos); */
 
 const styles = StyleSheet.create({
   body__container: {

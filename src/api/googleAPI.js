@@ -1,4 +1,4 @@
-import { googleToken, googleMapsAPI } from "./config.js";
+import { googleToken, googleMapsAPI, googleMapsRouteAPI } from "./config.js";
 import axios from "axios";
 
 const findPlace = async (query) => {
@@ -32,4 +32,18 @@ const getPlaceDetail = async (placeId) => {
   }
 };
 
-export { findPlace, getPlaceDetail };
+const getRoute = async (origin, destiny) => {
+  try {
+    const url = `${googleMapsRouteAPI}json?key=${googleToken}&origin=${origin}&destination=${destiny}`;
+    const { data } = await axios.get(url);
+    if (data.status === "OK") {
+      return data.routes;
+    } else {
+      return "Error seleccionando la dirección. Intentelo más tarde.";
+    }
+  } catch (error) {
+    return "Error de interno del servidor. Intentelo más tarde.";
+  }
+};
+
+export { findPlace, getPlaceDetail, getRoute };

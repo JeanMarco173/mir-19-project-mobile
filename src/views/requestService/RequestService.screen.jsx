@@ -20,6 +20,7 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AlertDialog from "../../components/alertDialog/AlertDialog.jsx";
 import moment from "moment";
+import { CommonActions } from "@react-navigation/native";
 
 import styles from "./requestservice.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";
@@ -51,10 +52,6 @@ const RequestServiceForm = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (!isDateValid && date !== "") dispatch(setDate(""));
-  }, [isDateValid]);
-
-  useEffect(() => {
     dispatch(setDate(moment(datePicker).format("YYYY-MM-DD")));
   }, [datePicker]);
 
@@ -69,10 +66,6 @@ const RequestServiceForm = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (!isDateValid && hour !== "") dispatch(setHour(""));
-  }, [isHourValid]);
-
-  useEffect(() => {
     dispatch(setHour(moment(hourPicker).format("HH:mm")));
   }, [hourPicker]);
 
@@ -82,16 +75,28 @@ const RequestServiceForm = ({ navigation }) => {
 
   const goToResume = () => {
     if (origin && destiny && date && hour && detail) {
-      console.log("todo en orden");
+      navigation.navigate("SelectDriver");
     } else {
       console.log("cuidado marico, no esta en orden");
     }
   };
 
+  /**
+   * resetNavigation to home
+   */
+
+  const goBack = () =>
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      })
+    );
+
   return (
     <SafeAreaView style={safeareaStyle.container__light}>
       <View style={headerStyle.container}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={goBack}>
           <FontAwesome name="close" size={24} color="#254A5A" />
         </TouchableOpacity>
         <Text style={textStyle.header__text}>Dirección</Text>
@@ -187,6 +192,7 @@ const RequestServiceForm = ({ navigation }) => {
                 multiline={true}
                 style={styles.input__area__form}
                 placeholder="Detalle del envío"
+                value={detail}
                 onChangeText={(text) => dispatch(setDetail(text))}
               />
             </View>

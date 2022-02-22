@@ -9,6 +9,7 @@ import Wellcome from "./src/views/wellcome/Wellcome.screen.jsx";
 import Home from "./src/views/home/Home.screen.jsx";
 import FindAddress from "./src/views/findAddress/FindAdress.screen.jsx";
 import RequestServiceForm from "./src/views/requestService/RequestService.screen.jsx";
+import SelectDriver from "./src/views/requestService/SelectDriver.jsx";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,11 @@ function RequestServiceStack() {
       <Stack.Screen
         name="RequestServiceForm"
         component={RequestServiceForm}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SelectDriver"
+        component={SelectDriver}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -37,13 +43,13 @@ function App() {
         <Provider store={store}>
           <Stack.Navigator>
             <Stack.Screen
-              name="RequestServiceStack"
-              component={RequestServiceStack}
+              name="Home"
+              component={Home}
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="Home"
-              component={Home}
+              name="RequestServiceStack"
+              component={RequestServiceStack}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
