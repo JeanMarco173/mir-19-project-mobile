@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Platform } from "react-native";
 
 const styles = StyleSheet.create({
   header__container: {
@@ -31,9 +31,9 @@ const styles = StyleSheet.create({
 
   contact__container: {
     width: "100%",
-    height: 30,
+    height: 20,
     position: "absolute",
-    bottom: 65,
+    bottom: Platform.OS === "ios" ? 80 : 0,
     left: 25,
     alignItems: "center",
   },

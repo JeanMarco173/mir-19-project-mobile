@@ -4,19 +4,19 @@ const styles = StyleSheet.create({
   title__text: {
     color: "#276C91",
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: Platform.OS === "ios" ? "700" : "bold",
   },
 
   title__text__dark: {
     color: "#FFFFFF",
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: Platform.OS === "ios" ? "700" : "bold",
   },
 
   header__text: {
     color: "#254A5A",
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: Platform.OS === "ios" ? "700" : "bold",
     marginHorizontal: "30%",
   },
 
@@ -36,6 +36,13 @@ const styles = StyleSheet.create({
     color: "#276C91",
     fontSize: 18,
     fontWeight: "500",
+  },
+
+  error__text: {
+    marginTop: 5,
+    color: "#F2774B",
+    fontSize: 14,
+    fontWeight: Platform.OS === "ios" ? "600" : "normal",
   },
 });
 
