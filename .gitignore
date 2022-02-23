@@ -56,3 +56,6 @@ dist/
 
 # FirebaseData
 firebase.js
+
+# config
+src/api/config.js
