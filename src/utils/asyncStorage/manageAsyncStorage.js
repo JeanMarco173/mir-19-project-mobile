@@ -4,9 +4,27 @@ const getUserFromStorage = async () => {
   try {
     const value = await AsyncStorage.getItem("user");
     if (value !== null) {
-      return JSON.parse(value);
+      const user = JSON.parse(value);
+      return user;
+    } else {
+      return false;
     }
   } catch (error) {
+    return false;
+    // error reading value
+  }
+};
+
+const getTokenFromStorage = async () => {
+  try {
+    const value = await AsyncStorage.getItem("token");
+    if (value !== null) {
+      return value;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
     // error reading value
   }
 };
@@ -28,4 +46,9 @@ const setTokenToStorage = async (token) => {
   }
 };
 
-export { getUserFromStorage, setUserToStorage, setTokenToStorage };
+export {
+  getUserFromStorage,
+  setUserToStorage,
+  setTokenToStorage,
+  getTokenFromStorage,
+};

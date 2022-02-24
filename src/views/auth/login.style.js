@@ -1,16 +1,38 @@
 import { StyleSheet, Dimensions } from "react-native";
-const widthScreen = Dimensions.get("screen").width;
-const heightScreen = Dimensions.get("screen").height;
+const bodyHeight = Dimensions.get("screen").height - 60;
 
 const styles = StyleSheet.create({
-  container: {
-    width: widthScreen,
-    height: heightScreen,
-    justifyContent: "center",
-    alignContent: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+  body__container: {
+    width: "100%",
+    height: bodyHeight,
+    backgroundColor: "#F2F2F2",
+    paddingHorizontal: 25,
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
+    paddingTop: 30,
+  },
+
+  input__form__container: {
+    width: "100%",
+    marginBottom: 25,
+  },
+
+  input: {
+    backgroundColor: "white",
+    height: 45,
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+    color: "#276C91",
+    fontSize: 20,
+    fontWeight: Platform.OS === "ios" ? "400" : "normal",
+  },
+
+  action__container: {
+    width: "100%",
+    left: 25,
     position: "absolute",
-    top: 0,
+    bottom: 75,
   },
 });
 

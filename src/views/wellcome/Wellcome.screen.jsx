@@ -7,6 +7,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { PresenceTransition } from "native-base";
+import { CommonActions } from "@react-navigation/native";
+
+import {
+  getUserFromStorage,
+  getTokenFromStorage,
+} from "../../utils/asyncStorage/manageAsyncStorage.js";
+import { setInitalStateLogin } from "../../store/user/user.slice.js";
+import { useDispatch } from "react-redux";
 
 import styles from "./wellcome.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";
@@ -14,12 +22,35 @@ import { primaryButtonStyle } from "../../styles/buttons.styles.js";
 import textStyle from "../../styles/text.styles.js";
 
 const Wellcome = ({ navigation }) => {
+  const dispatch = useDispatch();
+
+  /**
+   * resetNavigation to home
+   */
+
+  const goHome = () =>
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "ProtectedStack" }],
+      })
+    );
   /**
    * UI States and variables
    */
   const [isVisible, setIsVisible] = useState(false);
   useEffect(() => {
-    setIsVisible(true);
+    const getCredentials = async () => {
+      const token = await getTokenFromStorage();
+      const user = await getUserFromStorage();
+      if (user && token) {
+        dispatch(setInitalStateLogin({ user, token }));
+        goHome();
+      } else {
+        setIsVisible(true);
+      }
+    };
+    getCredentials();
   }, []);
 
   const initialAnitmation = {
@@ -65,7 +96,9 @@ const Wellcome = ({ navigation }) => {
           <View style={styles.login__container}>
             <TouchableOpacity
               style={primaryButtonStyle.container}
-              onPress={() => navigation.navigate("Home")}
+              onPress={() =>
+                navigation.navigate("AuthStack", { screen: "Login" })
+              }
             >
               <Text style={primaryButtonStyle.text}>Inicia sesión</Text>
             </TouchableOpacity>

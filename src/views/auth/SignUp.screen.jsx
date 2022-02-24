@@ -96,10 +96,18 @@ const SignUp = ({ navigation }) => {
               />
             )}
             name="name"
-            rules={{ required: true, minLength: 3 }}
+            rules={{
+              required: { value: true, message: "Campo obligatorio" },
+              minLength: {
+                value: 3,
+                message: "Ingrese un nombre válido",
+              },
+            }}
           />
           {errors.firstName && (
-            <Text style={textStyle.error__text}>Campo obligatorio.</Text>
+            <Text style={textStyle.error__text}>
+              {errors.firstName.message}
+            </Text>
           )}
         </View>
         <View style={styles.input__form__container}>
@@ -118,10 +126,16 @@ const SignUp = ({ navigation }) => {
               />
             )}
             name="surName"
-            rules={{ required: true, minLength: 6 }}
+            rules={{
+              required: { value: true, message: "Campo obligatorio" },
+              minLength: {
+                value: 6,
+                message: "Ingrese un apellido válido",
+              },
+            }}
           />
           {errors.surName && (
-            <Text style={textStyle.error__text}>Campo obligatorio.</Text>
+            <Text style={textStyle.error__text}>{errors.surName.message}</Text>
           )}
         </View>
         <View style={styles.input__form__container}>
@@ -140,10 +154,16 @@ const SignUp = ({ navigation }) => {
               />
             )}
             name="email"
-            rules={{ required: true, pattern: /^\S+@\S+$/i }}
+            rules={{
+              required: { value: true, message: "Campo obligatorio" },
+              pattern: {
+                value: /^\S+@\S+$/i,
+                message: "Ingrese un email válido",
+              },
+            }}
           />
           {errors.email && (
-            <Text style={textStyle.error__text}>Campo obligatorio.</Text>
+            <Text style={textStyle.error__text}>{errors.email.message}</Text>
           )}
         </View>
         <View style={styles.input__form__container}>
@@ -162,10 +182,20 @@ const SignUp = ({ navigation }) => {
               />
             )}
             name="password"
-            rules={{ required: true, maxLength: 16, minLength: 6 }}
+            rules={{
+              required: { value: true, message: "Campo obligatorio" },
+              maxLength: {
+                value: 16,
+                message: "La contraseña debe tener 16 caracteres como máximo",
+              },
+              minLength: {
+                value: 6,
+                message: "La contraseña debe tener 16 caracteres como minimo",
+              },
+            }}
           />
           {errors.password && (
-            <Text style={textStyle.error__text}>Campo obligatorio.</Text>
+            <Text style={textStyle.error__text}>{errors.password.message}</Text>
           )}
         </View>
         <FeedbackMessage

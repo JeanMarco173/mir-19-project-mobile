@@ -26,15 +26,17 @@ const handleSignUp = async (email, password) => {
     }); */
 };
 
-const handleSignIn = (email, password) => {
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredentials) => {
-      const user = userCredentials.user;
-      console.log("user", user);
-    })
-    .catch((error) => {
-      console.log("error", error);
-    });
+const handleSignIn = async (email, password) => {
+  try {
+    const userCredentials = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return { user: userCredentials.user };
+  } catch (error) {
+    return { error };
+  }
 };
 
 export { handleSignUp, handleSignIn };

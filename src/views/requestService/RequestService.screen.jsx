@@ -9,18 +9,19 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
+import { CommonActions } from "@react-navigation/native";
 import { useDisclose } from "native-base";
 import { FontAwesome } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import moment from "moment";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   setDate,
   setHour,
   setDetail,
 } from "../../store/requestService/requestservice.slice.js";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import AlertDialog from "../../components/alertDialog/AlertDialog.jsx";
-import moment from "moment";
-import { CommonActions } from "@react-navigation/native";
 
 import styles from "./requestservice.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";

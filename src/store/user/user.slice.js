@@ -30,6 +30,8 @@ const user = createSlice({
   name: "user",
   initialState: {
     user: initialState,
+    token: "",
+    isAuth: false,
     signUpState: {
       loading: false,
       error: false,
@@ -48,9 +50,15 @@ const user = createSlice({
       state[action.payload].message = "";
       state[action.payload].status = "";
     },
+    setInitalStateLogin(state, action) {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.isAuth = true;
+    },
     logout: (state, action) => {
       state.user = null;
-      window.localStorage.clear();
+      state.token = null;
+      state.isAuth = false;
     },
   },
   extraReducers: (builder) => {
@@ -101,6 +109,8 @@ const user = createSlice({
           state.getAccesTokenState.message = "Se inicio sesión con éxito 🙂";
           state.getAccesTokenState.status = "OK";
           state.user = action.payload.data.customer;
+          state.token = action.payload.data.token;
+          state.isAuth = true;
           return;
         }
       })
@@ -111,9 +121,12 @@ const user = createSlice({
   },
 });
 
-export const { resetUserMethodsMessage, logout } = user.actions;
+export const { resetUserMethodsMessage, logout, setInitalStateLogin } =
+  user.actions;
 
 export const selectUser = (state) => state.user.user;
+export const selectToken = (state) => state.user.token;
+export const selecIsAuth = (state) => state.user.isAuth;
 export const selectSignUpState = (state) => state.user.signUpState;
 export const selectGetAccesTokenState = (state) =>
   state.user.getAccesTokenState;

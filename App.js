@@ -5,6 +5,9 @@ import { NativeBaseProvider } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import { useSelector } from "react-redux";
+import { selecIsAuth } from "./src/store/user/user.slice.js";
+
 import SignUp from "./src/views/auth/SignUp.screen.jsx";
 import Login from "./src/views/auth/Login.screen.jsx";
 import Wellcome from "./src/views/wellcome/Wellcome.screen.jsx";
@@ -28,6 +31,35 @@ function AuthStack() {
         component={Login}
         options={{ headerShown: false }}
       />
+    </Stack.Navigator>
+  );
+}
+
+function ProtectedStack() {
+  const isAuth = useSelector(selecIsAuth);
+  console.log("isAuth", isAuth);
+  return (
+    <Stack.Navigator>
+      {isAuth ? (
+        <>
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="RequestServiceStack"
+            component={RequestServiceStack}
+            options={{ headerShown: false }}
+          />
+        </>
+      ) : (
+        <Stack.Screen
+          name="AuthStack"
+          component={AuthStack}
+          options={{ headerShown: false }}
+        />
+      )}
     </Stack.Navigator>
   );
 }
@@ -67,18 +99,8 @@ function App() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="AuthStack"
-              component={AuthStack}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Home"
-              component={Home}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="RequestServiceStack"
-              component={RequestServiceStack}
+              name="ProtectedStack"
+              component={ProtectedStack}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
