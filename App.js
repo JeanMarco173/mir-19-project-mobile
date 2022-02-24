@@ -6,6 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import SignUp from "./src/views/auth/SignUp.screen.jsx";
+import Login from "./src/views/auth/Login.screen.jsx";
 import Wellcome from "./src/views/wellcome/Wellcome.screen.jsx";
 import Home from "./src/views/home/Home.screen.jsx";
 import FindAddress from "./src/views/findAddress/FindAdress.screen.jsx";
@@ -20,6 +21,11 @@ function AuthStack() {
       <Stack.Screen
         name="SignUp"
         component={SignUp}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

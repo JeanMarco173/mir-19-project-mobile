@@ -1,11 +1,18 @@
-import { googleToken, googleMapsAPI, googleMapsRouteAPI } from "./config.js";
+import {
+  googleToken,
+  googleMapsAPI,
+  googleMapsRouteAPI,
+} from "../../config.js";
 import axios from "axios";
 
+/**
+ *
+ * Servicio que nos permite obtener lugares para el buscador
+ */
 const findPlace = async (query) => {
   try {
     const url = `${googleMapsAPI}autocomplete/json?key=${googleToken}&components=country:PE&input=${query}`;
-    const response = await axios.get(url);
-    const { data } = await response;
+    const { data } = await axios.get(url);
     if (data.status === "OK" && data.predictions.length > 0) {
       return data.predictions;
     } else if (data.status === "OK" && predictions.length === 0) {
@@ -18,6 +25,10 @@ const findPlace = async (query) => {
   }
 };
 
+/**
+ *
+ * Servicio que nos permite obtener los datos de un lugar
+ */
 const getPlaceDetail = async (placeId) => {
   try {
     const url = `${googleMapsAPI}details/json?key=${googleToken}&place_id=${placeId}`;
@@ -32,6 +43,10 @@ const getPlaceDetail = async (placeId) => {
   }
 };
 
+/**
+ *
+ * Servicio que nos permite la ruta entre direcciones
+ */
 const getRoute = async (origin, destiny) => {
   try {
     const url = `${googleMapsRouteAPI}json?key=${googleToken}&origin=${origin}&destination=${destiny}`;

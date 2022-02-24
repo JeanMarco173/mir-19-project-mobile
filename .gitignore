@@ -58,4 +58,4 @@ dist/
 firebase.js
 
 # config
-src/api/config.js
+config.js

@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
   TextInput,
-  Button,
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
+import Loading from "../../components/loading/Loading.jsx";
+import FeedbackMessage from "../../components/feedback/FeedbackMessage.jsx";
 import { useForm, Controller } from "react-hook-form";
 import { FontAwesome } from "@expo/vector-icons";
+import { handleSignUp } from "../../utils/firebase/auth.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  resetUserMethodsMessage,
+  selectSignUpState,
+  signUp,
+} from "../../store/user/user.slice.js";
 
 import styles from "./signup.style";
 import safeareaStyle from "../../styles/safearea.style.js";
@@ -17,9 +25,9 @@ import textStyle from "../../styles/text.styles.js";
 import { primaryButtonStyle } from "../../styles/buttons.styles.js";
 
 const SignUp = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { loading, message, status } = useSelector(selectSignUpState);
   const {
-    register,
-    setValue,
     handleSubmit,
     control,
     formState: { errors },
@@ -31,9 +39,36 @@ const SignUp = ({ navigation }) => {
       password: "",
     },
   });
-  const onSubmit = (data) => {
-    /*  console.log("Hola");
-    console.log(data); */
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [feedbackType, setFeedbackType] = useState("error");
+  const [feedbackMessage, setFeedbackMessage] = useState(message);
+
+  useEffect(() => {
+    if (status === "OK") {
+      setFeedbackType("sucees");
+      setFeedbackOpen(true);
+      setFeedbackMessage(message);
+      setTimeout(() => {
+        dispatch(resetUserMethodsMessage("signUpState"));
+        navigation.navigate("Login");
+      }, 3500);
+    }
+  }, [dispatch, status]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setFeedbackOpen(false);
+    }, 2000);
+  }, [feedbackOpen]);
+
+  const onSubmit = async (data) => {
+    const res = await handleSignUp(data.email, data.password);
+    if (res.user) {
+      dispatch(signUp(data));
+    } else {
+      setFeedbackMessage(res.error.message);
+      setFeedbackOpen(true);
+    }
   };
 
   return (
@@ -60,7 +95,7 @@ const SignUp = ({ navigation }) => {
                 placeholderTextColor={"rgba(39,108,145,0.5)"}
               />
             )}
-            name="firstName"
+            name="name"
             rules={{ required: true, minLength: 3 }}
           />
           {errors.firstName && (
@@ -83,7 +118,7 @@ const SignUp = ({ navigation }) => {
               />
             )}
             name="surName"
-            rules={{ required: true }}
+            rules={{ required: true, minLength: 6 }}
           />
           {errors.surName && (
             <Text style={textStyle.error__text}>Campo obligatorio.</Text>
@@ -133,6 +168,11 @@ const SignUp = ({ navigation }) => {
             <Text style={textStyle.error__text}>Campo obligatorio.</Text>
           )}
         </View>
+        <FeedbackMessage
+          type={feedbackType}
+          message={feedbackMessage}
+          isOpen={feedbackOpen}
+        />
         <View style={styles.action__container}>
           <TouchableOpacity
             style={primaryButtonStyle.container}
@@ -142,6 +182,7 @@ const SignUp = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+      {loading && <Loading />}
     </SafeAreaView>
   );
 };

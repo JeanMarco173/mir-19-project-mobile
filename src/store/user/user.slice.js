@@ -1,24 +1,121 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { signUpCustomer, getAccessToken } from "../../api/housemoveAPI.js";
+
 const initialState = {
-  token: "",
-  firebaseToken: "",
   id: "",
   name: "",
   surName: "",
   email: "",
+  avatarUrl: "",
+  addresses: [],
 };
+
+/**
+ * THUNKS
+ */
+
+export const signUp = createAsyncThunk("user/signUp", (data) =>
+  signUpCustomer(data)
+);
+
+export const getAccesToken = createAsyncThunk("user/getAccesToken", (data) =>
+  getAccessToken(data)
+);
+
+/**
+ * SLICE
+ */
+
 const user = createSlice({
   name: "user",
-  initialState,
+  initialState: {
+    user: initialState,
+    signUpState: {
+      loading: false,
+      error: false,
+      message: "",
+      status: "",
+    },
+    getAccesTokenState: {
+      loading: false,
+      error: false,
+      message: "",
+      status: "",
+    },
+  },
   reducers: {
-    setUser: (state, action) => {
-      state = action.payload;
+    resetUserMethodsMessage(state, action) {
+      state[action.payload].message = "";
+      state[action.payload].status = "";
     },
     logout: (state, action) => {
-      state = initialState;
+      state.user = null;
+      window.localStorage.clear();
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      //* Sign Up Method Thunk */
+      .addCase(signUp.pending, (state) => {
+        state.signUpState.loading = true;
+        state.signUpState.error = false;
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.signUpState.loading = false;
+        state.signUpState.error = false;
+        console.log("actionstatus", action.payload.status);
+        console.log("actionmessage", action.payload.message);
+
+        if (action.payload.status === "Failed") {
+          state.signUpState.message = "Error registrando al usuario 😔";
+          state.signUpState.status = "Failed";
+          return;
+        }
+
+        if (action.payload.status === "OK") {
+          state.signUpState.message = "El usuario fue registrado con éxito 🙂";
+          state.signUpState.status = "OK";
+          return;
+        }
+      })
+      .addCase(signUp.rejected, (state) => {
+        state.signUpState.loading = false;
+        state.signUpState.error = true;
+      })
+      //* Get Access Token Method Thunk */
+      .addCase(getAccesToken.pending, (state) => {
+        state.getAccesTokenState.loading = true;
+        state.getAccesTokenState.error = false;
+      })
+      .addCase(getAccesToken.fulfilled, (state, action) => {
+        state.getAccesTokenState.loading = false;
+        state.getAccesTokenState.error = false;
+
+        if (action.payload.status === "Failed") {
+          state.getAccesTokenState.message = "Error iniciando sesión 😔";
+          state.getAccesTokenState.status = "Failed";
+          return;
+        }
+
+        if (action.payload.status === "OK") {
+          state.getAccesTokenState.message = "Se inicio sesión con éxito 🙂";
+          state.getAccesTokenState.status = "OK";
+          state.user = action.payload.data.customer;
+          return;
+        }
+      })
+      .addCase(getAccesToken.rejected, (state) => {
+        state.getAccesTokenState.loading = false;
+        state.getAccesTokenState.error = true;
+      });
   },
 });
 
-export const { setUser, logout } = user.actions;
+export const { resetUserMethodsMessage, logout } = user.actions;
+
+export const selectUser = (state) => state.user.user;
+export const selectSignUpState = (state) => state.user.signUpState;
+export const selectGetAccesTokenState = (state) =>
+  state.user.getAccesTokenState;
+
 export default user.reducer;
