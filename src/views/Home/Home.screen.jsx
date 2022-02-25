@@ -17,6 +17,7 @@ import textStyle from "../../styles/text.styles.js";
 
 const Home = ({ navigation }) => {
   const [addresses, setAddresses] = useState([]);
+
   const goToRequestService = () => navigation.navigate("RequestServiceStack");
   return (
     <SafeAreaView style={safeareaStyle.container}>

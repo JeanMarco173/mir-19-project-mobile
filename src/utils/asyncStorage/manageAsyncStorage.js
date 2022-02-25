@@ -46,9 +46,18 @@ const setTokenToStorage = async (token) => {
   }
 };
 
+const clearStorage = async (token) => {
+  try {
+    await AsyncStorage.clear();
+  } catch (error) {
+    // error reading value
+  }
+};
+
 export {
   getUserFromStorage,
   setUserToStorage,
   setTokenToStorage,
   getTokenFromStorage,
+  clearStorage,
 };

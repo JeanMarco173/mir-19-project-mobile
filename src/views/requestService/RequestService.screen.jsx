@@ -90,7 +90,14 @@ const RequestServiceForm = ({ navigation }) => {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: "Home" }],
+        routes: [
+          {
+            name: "TabNavigator",
+            params: {
+              screen: "Home",
+            },
+          },
+        ],
       })
     );
 
@@ -122,6 +129,7 @@ const RequestServiceForm = ({ navigation }) => {
                       ? styles.input__form__text
                       : styles.input__form__text__placeholder
                   }
+                  numberOfLines={1}
                 >
                   {origin ? origin.name : "Dirección de origen"}
                 </Text>
@@ -141,6 +149,7 @@ const RequestServiceForm = ({ navigation }) => {
                       ? styles.input__form__text
                       : styles.input__form__text__placeholder
                   }
+                  numberOfLines={1}
                 >
                   {destiny ? destiny.name : "Dirección destino"}
                 </Text>
@@ -161,6 +170,7 @@ const RequestServiceForm = ({ navigation }) => {
                       ? styles.input__form__text
                       : styles.input__form__text__placeholder
                   }
+                  numberOfLines={1}
                 >
                   {date ? date : "Fecha del envío"}
                 </Text>
@@ -181,6 +191,7 @@ const RequestServiceForm = ({ navigation }) => {
                       ? styles.input__form__text
                       : styles.input__form__text__placeholder
                   }
+                  numberOfLines={1}
                 >
                   {hour ? hour : "Hora"}
                 </Text>

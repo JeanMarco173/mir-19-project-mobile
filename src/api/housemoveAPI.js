@@ -41,7 +41,6 @@ const consumer = async (url, method, body) => {
 const signUpCustomer = async (body) => {
   const url = `${houseMoveAPI}/customers/`;
   const response = await consumer(url, "POST", body);
-  console.log("response", response);
   return response;
 };
 

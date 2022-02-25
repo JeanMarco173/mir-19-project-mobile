@@ -57,7 +57,7 @@ const SelectDriver = ({ navigation }) => {
     };
     if (origin && destiny) {
       mapRef.current.fitToSuppliedMarkers(["1", "2"], {
-        edgePadding: { top: 10, right: 50, bottom: 10, left: 50 },
+        edgePadding: { top: 100, right: 50, bottom: 100, left: 50 },
       });
       setPointsOfRoute();
     }

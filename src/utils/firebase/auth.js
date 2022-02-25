@@ -15,15 +15,6 @@ const handleSignUp = async (email, password) => {
   } catch (error) {
     return { error };
   }
-  /* .then((userCredentials) => {
-      const user = userCredentials.user;
-      console.log("user", user);
-      return { user };
-    })
-    .catch((error) => {
-      console.log("error", error);
-      return { error };
-    }); */
 };
 
 const handleSignIn = async (email, password) => {

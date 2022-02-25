@@ -11,10 +11,11 @@ import { selecIsAuth } from "./src/store/user/user.slice.js";
 import SignUp from "./src/views/auth/SignUp.screen.jsx";
 import Login from "./src/views/auth/Login.screen.jsx";
 import Wellcome from "./src/views/wellcome/Wellcome.screen.jsx";
-import Home from "./src/views/home/Home.screen.jsx";
 import FindAddress from "./src/views/findAddress/FindAdress.screen.jsx";
 import RequestServiceForm from "./src/views/requestService/RequestService.screen.jsx";
 import SelectDriver from "./src/views/requestService/SelectDriver.jsx";
+
+import TabNavigator from "./src/navigation/tab.navigation.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,13 +23,13 @@ function AuthStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="SignUp"
-        component={SignUp}
+        name="Login"
+        component={Login}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Login"
-        component={Login}
+        name="SignUp"
+        component={SignUp}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
@@ -37,14 +38,13 @@ function AuthStack() {
 
 function ProtectedStack() {
   const isAuth = useSelector(selecIsAuth);
-  console.log("isAuth", isAuth);
   return (
     <Stack.Navigator>
       {isAuth ? (
         <>
           <Stack.Screen
-            name="Home"
-            component={Home}
+            name="TabNavigator"
+            component={TabNavigator}
             options={{ headerShown: false }}
           />
           <Stack.Screen

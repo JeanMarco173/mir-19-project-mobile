@@ -13,7 +13,7 @@ import {
   getUserFromStorage,
   getTokenFromStorage,
 } from "../../utils/asyncStorage/manageAsyncStorage.js";
-import { setInitalStateLogin } from "../../store/user/user.slice.js";
+import { setInitalStateLogin, setIsAuth } from "../../store/user/user.slice.js";
 import { useDispatch } from "react-redux";
 
 import styles from "./wellcome.style.js";
@@ -23,6 +23,7 @@ import textStyle from "../../styles/text.styles.js";
 
 const Wellcome = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [isVisible, setIsVisible] = useState(false);
 
   /**
    * resetNavigation to home
@@ -32,19 +33,29 @@ const Wellcome = ({ navigation }) => {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: "ProtectedStack" }],
+        routes: [
+          {
+            name: "ProtectedStack",
+            params: {
+              screen: "TabNavigator",
+              params: {
+                screen: "Home",
+              },
+            },
+          },
+        ],
       })
     );
   /**
    * UI States and variables
    */
-  const [isVisible, setIsVisible] = useState(false);
   useEffect(() => {
     const getCredentials = async () => {
       const token = await getTokenFromStorage();
       const user = await getUserFromStorage();
       if (user && token) {
         dispatch(setInitalStateLogin({ user, token }));
+        dispatch(setIsAuth());
         goHome();
       } else {
         setIsVisible(true);
@@ -97,14 +108,24 @@ const Wellcome = ({ navigation }) => {
             <TouchableOpacity
               style={primaryButtonStyle.container}
               onPress={() =>
-                navigation.navigate("AuthStack", { screen: "Login" })
+                navigation.navigate("ProtectedStack", {
+                  screen: "AuthStack",
+                  params: {
+                    screen: "Login",
+                  },
+                })
               }
             >
               <Text style={primaryButtonStyle.text}>Inicia sesión</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("AuthStack", { screen: "SignUp" })
+                navigation.navigate("ProtectedStack", {
+                  screen: "AuthStack",
+                  params: {
+                    screen: "SignUp",
+                  },
+                })
               }
               style={primaryButtonStyle.container}
             >

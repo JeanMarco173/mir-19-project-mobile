@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     width: "100%",
     left: 25,
     position: "absolute",
-    bottom: 30,
+    bottom: Platform.OS === "ios" ? 100 : 30,
   },
 });
 

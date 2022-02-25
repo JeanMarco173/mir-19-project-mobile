@@ -53,6 +53,8 @@ const user = createSlice({
     setInitalStateLogin(state, action) {
       state.user = action.payload.user;
       state.token = action.payload.token;
+    },
+    setIsAuth: (state, action) => {
       state.isAuth = true;
     },
     logout: (state, action) => {
@@ -71,8 +73,6 @@ const user = createSlice({
       .addCase(signUp.fulfilled, (state, action) => {
         state.signUpState.loading = false;
         state.signUpState.error = false;
-        console.log("actionstatus", action.payload.status);
-        console.log("actionmessage", action.payload.message);
 
         if (action.payload.status === "Failed") {
           state.signUpState.message = "Error registrando al usuario 😔";
@@ -110,7 +110,6 @@ const user = createSlice({
           state.getAccesTokenState.status = "OK";
           state.user = action.payload.data.customer;
           state.token = action.payload.data.token;
-          state.isAuth = true;
           return;
         }
       })
@@ -121,8 +120,12 @@ const user = createSlice({
   },
 });
 
-export const { resetUserMethodsMessage, logout, setInitalStateLogin } =
-  user.actions;
+export const {
+  resetUserMethodsMessage,
+  logout,
+  setInitalStateLogin,
+  setIsAuth,
+} = user.actions;
 
 export const selectUser = (state) => state.user.user;
 export const selectToken = (state) => state.user.token;

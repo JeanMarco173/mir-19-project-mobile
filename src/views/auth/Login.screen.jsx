@@ -21,6 +21,7 @@ import {
   getAccesToken,
   selectUser,
   selectToken,
+  setIsAuth,
 } from "../../store/user/user.slice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
@@ -55,17 +56,26 @@ const Login = ({ navigation }) => {
    * resetNavigation to home
    */
 
-  const goHome = () =>
+  const goHome = () => {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: "Home" }],
+        routes: [
+          {
+            name: "ProtectedStack",
+            params: {
+              screen: "TabNavigator",
+              params: {
+                screen: "Home",
+              },
+            },
+          },
+        ],
       })
     );
+  };
 
   useEffect(() => {
-    console.log("user", user);
-    console.log("token", token);
     const provideUserStorage = async () => await setUserToStorage(user);
     const provideTokenStorage = async () => await setTokenToStorage(token);
     if (status === "OK") {
@@ -76,6 +86,7 @@ const Login = ({ navigation }) => {
       provideTokenStorage();
       setTimeout(() => {
         dispatch(resetUserMethodsMessage("getAccesTokenState"));
+        dispatch(setIsAuth());
         goHome();
       }, 3500);
     }
@@ -87,7 +98,7 @@ const Login = ({ navigation }) => {
     }, 2000);
   }, [feedbackOpen]);
 
-  const onSubmit = async (data, errors) => {
+  const onSubmit = async (data) => {
     const res = await handleSignIn(data.email, data.password);
     if (res.user) {
       dispatch(getAccesToken({ email: data.email }));
