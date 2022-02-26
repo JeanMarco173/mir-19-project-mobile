@@ -20,8 +20,14 @@ import {
   setDate,
   setHour,
   setDetail,
-} from "../../store/requestService/requestservice.slice.js";
+  selectService,
+  selectRequestState,
+  request,
+  resetServiceMethodsMessage,
+} from "../../store/service/service.slice.js";
+import { logout, selectUser } from "../../store/user/user.slice.js";
 import AlertDialog from "../../components/alertDialog/AlertDialog.jsx";
+import Loading from "../../components/loading/Loading.jsx";
 
 import styles from "./requestservice.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";
@@ -31,9 +37,10 @@ import textStyle from "../../styles/text.styles.js";
 
 const RequestServiceForm = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { origin, destiny, date, hour, detail } = useSelector(
-    (state) => state.requestService
-  );
+  const { origin, destiny, date, hour, detail } = useSelector(selectService);
+  const user = useSelector(selectUser);
+  const { loading, message, status } = useSelector(selectRequestState);
+
   const { isOpen, onOpen, onClose } = useDisclose();
   const [datePicker, setDatePicker] = useState(new Date());
   const [hourPicker, setHourPicker] = useState(new Date());
@@ -70,13 +77,32 @@ const RequestServiceForm = ({ navigation }) => {
     dispatch(setHour(moment(hourPicker).format("HH:mm")));
   }, [hourPicker]);
 
+  useEffect(() => {
+    console.log("Holi");
+    if (status === "OK") {
+      console.log("status", status);
+      dispatch(resetServiceMethodsMessage("requestState"));
+      navigation.navigate("SelectDriver");
+    }
+  }, [status]);
+
   /**
    * requestService
    */
 
   const goToResume = () => {
     if (origin && destiny && date && hour && detail) {
-      navigation.navigate("SelectDriver");
+      dispatch(
+        request({
+          customer: user._id,
+          origin,
+          destiny,
+          date,
+          hour,
+          detail,
+          distance: 4,
+        })
+      );
     } else {
       console.log("cuidado marico, no esta en orden");
     }
@@ -215,7 +241,7 @@ const RequestServiceForm = ({ navigation }) => {
             style={primaryButtonStyle.container}
             onPress={goToResume}
           >
-            <Text style={primaryButtonStyle.text__center}>Siguiente</Text>
+            <Text style={primaryButtonStyle.text__center}>Solicitar</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -248,6 +274,7 @@ const RequestServiceForm = ({ navigation }) => {
           />
         )
       )}
+      {loading && <Loading />}
     </SafeAreaView>
   );
 };

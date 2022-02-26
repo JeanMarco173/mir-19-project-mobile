@@ -1,6 +1,5 @@
-const carsIcons = [
-  {
-    type: "Van",
+const carsIcons = {
+  Van: {
     icon: require("../../assets/van.png"),
     style: {
       width: 55,
@@ -8,8 +7,7 @@ const carsIcons = [
       resizeMode: "contain",
     },
   },
-  {
-    type: "Pickup",
+  Pickup: {
     icon: require("../../assets/small-truck.png"),
     style: {
       width: 50,
@@ -17,8 +15,7 @@ const carsIcons = [
       resizeMode: "contain",
     },
   },
-  {
-    type: "middleTruck",
+  Camion: {
     icon: require("../../assets/middle-truck.png"),
     style: {
       width: 50,
@@ -26,8 +23,7 @@ const carsIcons = [
       resizeMode: "contain",
     },
   },
-  {
-    type: "bigTruck",
+  Trailer: {
     icon: require("../../assets/big-truck.png"),
     style: {
       width: 76,
@@ -35,6 +31,6 @@ const carsIcons = [
       resizeMode: "contain",
     },
   },
-];
+};
 
 export default carsIcons;

@@ -1,6 +1,8 @@
 import { houseMoveAPI } from "../../config.js";
 import axios from "axios";
 
+import { getTokenFromStorage } from "../utils/asyncStorage/manageAsyncStorage.js";
+
 const consumer = async (url, method, body) => {
   const attributes = {
     method: method,
@@ -14,9 +16,8 @@ const consumer = async (url, method, body) => {
     url != `${houseMoveAPI}/customers/` ||
     url != `${houseMoveAPI}/customers/token`
   ) {
-    /* let token = await window.localStorage.getItem("userToken");
-    token = JSON.parse(token);
-    attributes.headers.Authorization = `Bearer ${token}`; */
+    const token = await getTokenFromStorage();
+    attributes.headers.Authorization = `Bearer ${token}`;
   }
   if (body) attributes.data = body;
   let status;
@@ -38,16 +39,57 @@ const consumer = async (url, method, body) => {
  * Customer
  */
 
-const signUpCustomer = async (body) => {
+const signUpCustomer = async (data) => {
   const url = `${houseMoveAPI}/customers/`;
-  const response = await consumer(url, "POST", body);
+  const response = await consumer(url, "POST", data);
   return response;
 };
 
-const getAccessToken = async (body) => {
+const getAccessToken = async (data) => {
   const url = `${houseMoveAPI}/customers/token/`;
-  const response = await consumer(url, "POST", body);
+  const response = await consumer(url, "POST", data);
   return response;
 };
 
-export { signUpCustomer, getAccessToken };
+const addAddress = async (data) => {
+  const url = `${houseMoveAPI}/customers/${data.customerId}/address`;
+  const response = await consumer(url, "POST", data.body);
+  return response;
+};
+
+const getAddresses = async (data, customerId) => {
+  const url = `${houseMoveAPI}/customers/${customerId}/address`;
+  const response = await consumer(url, "GET");
+  return response;
+};
+
+/**
+ * Service
+ */
+
+const requestService = async (data) => {
+  const url = `${houseMoveAPI}/services/`;
+  const response = await consumer(url, "POST", data);
+  return response;
+};
+
+const selectDriver = async (data, serviceId) => {
+  const url = `${houseMoveAPI}/services/${data.serviceId}/driver`;
+  const response = await consumer(url, "PATCH", data.body);
+  return response;
+};
+
+const getService = async (data) => {
+  const url = `${houseMoveAPI}/services/${data.serviceId}/driver`;
+  const response = await consumer(url, "PATCH", data.body);
+  return response;
+};
+
+export {
+  signUpCustomer,
+  getAccessToken,
+  addAddress,
+  getAddresses,
+  requestService,
+  selectDriver,
+};

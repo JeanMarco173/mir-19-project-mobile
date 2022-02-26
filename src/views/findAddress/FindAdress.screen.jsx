@@ -11,11 +11,9 @@ import { useDisclose } from "native-base";
 import PlaceFinder from "../../components/placeFinder/PlaceFinder.jsx";
 import AddressCard from "../../components/addressCard/AddressCard.jsx";
 import AlertDialog from "../../components/alertDialog/AlertDialog.jsx";
+
 import { useDispatch } from "react-redux";
-import {
-  setOrigin,
-  setDestiny,
-} from "../../store/requestService/requestservice.slice.js";
+import { setOrigin, setDestiny } from "../../store/service/service.slice.js";
 
 import styles from "./findadress.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";

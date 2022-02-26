@@ -13,7 +13,7 @@ function HomeTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ color }) => {
           let iconName;
           switch (route.name) {
             case "Home":

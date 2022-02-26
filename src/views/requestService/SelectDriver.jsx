@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setDate,
-  setHour,
-  setDetail,
-} from "../../store/requestService/requestservice.slice.js";
+  selectDrivers,
+  selectService,
+  selectSetDriverState,
+  setDriver,
+} from "../../store/service/service.slice.js";
 import { FontAwesome } from "@expo/vector-icons";
 import { getRoute } from "../../api/googleAPI.js";
 
@@ -26,40 +27,41 @@ import cars from "../../styles/cars.styles.js";
 import mapStyle from "../../styles/map.style.js";
 
 const SelectDriver = ({ navigation }) => {
-  const { origin, destiny } = useSelector((state) => state.requestService);
+  const service = useSelector(selectService);
+  const drivers = useSelector(selectDrivers);
+  const origin = service.origin;
+  const destiny = service.destiny;
   const mapRef = useRef();
 
   const [route, setRoute] = useState([]);
 
   const markerOrigin = {
-    latitude: origin.location.lat,
-    longitude: origin.location.lng,
+    latitude: origin.coordinates.lat,
+    longitude: origin.coordinates.lng,
   };
 
   const markerDestiny = {
-    latitude: destiny.location.lat,
-    longitude: destiny.location.lng,
+    latitude: destiny.coordinates.lat,
+    longitude: destiny.coordinates.lng,
   };
 
   useEffect(() => {
     const setPointsOfRoute = async () => {
-      const from = `${origin.location.lat},${origin.location.lng}`;
-      const to = `${destiny.location.lat},${destiny.location.lng}`;
+      const from = `${origin.coordinates.lat},${origin.coordinates.lng}`;
+      const to = `${destiny.coordinates.lat},${destiny.coordinates.lng}`;
       const res = await getRoute(from, to);
-      const pointAux = [markerOrigin];
-      res[0].legs[0].steps.forEach((item) =>
-        pointAux.push({
-          latitude: item.end_location.lat,
-          longitude: item.end_location.lng,
-        })
-      );
-      setRoute(pointAux);
+      const routeAux = [markerOrigin];
+      const pointsAux = res[0].legs[0].steps.map((item) => ({
+        latitude: item.end_location.lat,
+        longitude: item.end_location.lng,
+      }));
+      setRoute(routeAux.concat(pointsAux));
     };
     if (origin && destiny) {
-      mapRef.current.fitToSuppliedMarkers(["1", "2"], {
-        edgePadding: { top: 100, right: 50, bottom: 100, left: 50 },
-      });
       setPointsOfRoute();
+      mapRef.current.fitToSuppliedMarkers(["1", "2"], {
+        edgePadding: { top: 100, right: 20, bottom: 100, left: 20 },
+      });
     }
   }, []);
 
@@ -105,26 +107,35 @@ const SelectDriver = ({ navigation }) => {
       <View style={styles.content__container}>
         <View style={styles.drivers__container}>
           <ScrollView>
-            <TouchableOpacity style={styles.driver__button}>
-              <View style={styles.driver__icon__container}>
-                <Image style={cars[0].style} source={cars[0].icon} />
-              </View>
-              <View style={styles.driver__text__container}>
-                <Text style={styles.driver__text} numberOfLines={1}>
-                  Van
-                </Text>
-              </View>
-              <View style={styles.price__text__container}>
-                <Text style={styles.price__text} numberOfLines={1}>
-                  S/ 10.00
-                </Text>
-              </View>
-            </TouchableOpacity>
+            {drivers.length &&
+              drivers.map((driver) => (
+                <TouchableOpacity
+                  style={styles.driver__button}
+                  key={driver._id}
+                >
+                  <View style={styles.driver__icon__container}>
+                    <Image
+                      style={cars[driver.carDetail[0].type].style}
+                      source={cars[driver.carDetail[0].type].icon}
+                    />
+                  </View>
+                  <View style={styles.driver__text__container}>
+                    <Text style={styles.driver__text} numberOfLines={1}>
+                      {driver.carDetail[0].type}
+                    </Text>
+                  </View>
+                  <View style={styles.price__text__container}>
+                    <Text style={styles.price__text} numberOfLines={1}>
+                      S/ {driver.price}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
           </ScrollView>
         </View>
         <View style={styles.action__container}>
           <TouchableOpacity style={primaryButtonStyle.container}>
-            <Text style={primaryButtonStyle.text__center}>Siguiente</Text>
+            <Text style={primaryButtonStyle.text__center}>Aceptar</Text>
           </TouchableOpacity>
         </View>
       </View>

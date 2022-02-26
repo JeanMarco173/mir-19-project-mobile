@@ -187,7 +187,7 @@ const Login = ({ navigation }) => {
             style={primaryButtonStyle.container}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={primaryButtonStyle.text__center}>Siguiente</Text>
+            <Text style={primaryButtonStyle.text__center}>Iniciar sesión</Text>
           </TouchableOpacity>
         </View>
       </View>

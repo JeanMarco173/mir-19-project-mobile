@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 
 import styles from "./addresscard.style.js";

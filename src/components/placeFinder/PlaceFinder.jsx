@@ -23,13 +23,18 @@ const FindAddress = (props) => {
       }
     };
     findPlaceAPI();
+    return () => {
+      setQueryPlace("");
+      setPlaces([]);
+      setMessageError("");
+    };
   }, [queryPlace]);
 
   const getPlace = async (place) => {
     const response = await getPlaceDetail(place.place_id);
     const address = {
       name: response.formatted_address,
-      location: response.geometry.location,
+      coordinates: response.geometry.location,
     };
     setPlace(address);
   };
