@@ -17,10 +17,12 @@ const styles = StyleSheet.create({
   },
 
   ship__icon: {
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
     backgroundColor: "#FFF",
     borderRadius: 60,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   ship__detail__container: {

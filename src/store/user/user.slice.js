@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { signUpCustomer, getAccessToken } from "../../api/housemoveAPI.js";
+import {
+  signUpCustomer,
+  getAccessToken,
+  getAddresses,
+  addAddress,
+} from "../../api/housemoveAPI.js";
 
 const initialState = {
   id: "",
@@ -7,7 +12,6 @@ const initialState = {
   surName: "",
   email: "",
   avatarUrl: "",
-  addresses: [],
 };
 
 /**
@@ -22,6 +26,16 @@ export const getAccesToken = createAsyncThunk("user/getAccesToken", (data) =>
   getAccessToken(data)
 );
 
+export const getAddressesByUser = createAsyncThunk(
+  "user/getAddressesByUser",
+  (data) => getAddresses(data)
+);
+
+export const addAddressToUser = createAsyncThunk(
+  "user/addAddressToUser",
+  (data) => addAddress(data)
+);
+
 /**
  * SLICE
  */
@@ -32,6 +46,7 @@ const user = createSlice({
     user: initialState,
     token: "",
     isAuth: false,
+    addresses: [],
     signUpState: {
       loading: false,
       error: false,
@@ -39,6 +54,18 @@ const user = createSlice({
       status: "",
     },
     getAccesTokenState: {
+      loading: false,
+      error: false,
+      message: "",
+      status: "",
+    },
+    getAddressesByUserState: {
+      loading: false,
+      error: false,
+      message: "",
+      status: "",
+    },
+    addAddressToUserState: {
       loading: false,
       error: false,
       message: "",
@@ -60,6 +87,7 @@ const user = createSlice({
     logout: (state, action) => {
       state.user = null;
       state.token = null;
+      state.addresses = [];
       state.isAuth = false;
     },
   },
@@ -116,6 +144,34 @@ const user = createSlice({
       .addCase(getAccesToken.rejected, (state) => {
         state.getAccesTokenState.loading = false;
         state.getAccesTokenState.error = true;
+      })
+      //* Get Addresses Method Thunk */
+      .addCase(getAddressesByUser.pending, (state) => {
+        state.getAddressesByUserState.loading = true;
+        state.getAddressesByUserState.error = false;
+      })
+      .addCase(getAddressesByUser.fulfilled, (state, action) => {
+        state.getAddressesByUserState.loading = false;
+        state.getAddressesByUserState.error = false;
+
+        if (action.payload.status === "Failed") {
+          state.getAddressesByUserState.message =
+            "Error listando las direcciones 😔";
+          state.getAddressesByUserState.status = "Failed";
+          return;
+        }
+
+        if (action.payload.status === "OK") {
+          state.getAddressesByUserState.message =
+            "Se listó las direcciones con éxito 🙂";
+          state.getAddressesByUserState.status = "OK";
+          state.addresses = action.payload.data.addresses;
+          return;
+        }
+      })
+      .addCase(getAddressesByUser.rejected, (state) => {
+        state.getAddressesByUserState.loading = false;
+        state.getAddressesByUserState.error = true;
       });
   },
 });
@@ -130,8 +186,12 @@ export const {
 export const selectUser = (state) => state.user.user;
 export const selectToken = (state) => state.user.token;
 export const selecIsAuth = (state) => state.user.isAuth;
+export const selecAddresses = (state) => state.user.addresses;
 export const selectSignUpState = (state) => state.user.signUpState;
 export const selectGetAccesTokenState = (state) =>
   state.user.getAccesTokenState;
-
+export const selectGetAddressesByUserState = (state) =>
+  state.user.getAddressesByUserState;
+export const selectAddAddressToUserState = (state) =>
+  state.user.addAddressToUserState;
 export default user.reducer;

@@ -8,14 +8,18 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { CommonActions } from "@react-navigation/native";
+import Loading from "../../components/loading/Loading.jsx";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
+  resetServiceMethodsMessage,
   selectDrivers,
   selectService,
   selectSetDriverState,
   setDriver,
 } from "../../store/service/service.slice.js";
-import { FontAwesome } from "@expo/vector-icons";
 import { getRoute } from "../../api/googleAPI.js";
 
 import styles from "./selectdrive.style.js";
@@ -27,13 +31,17 @@ import cars from "../../styles/cars.styles.js";
 import mapStyle from "../../styles/map.style.js";
 
 const SelectDriver = ({ navigation }) => {
+  const dispatch = useDispatch();
   const service = useSelector(selectService);
   const drivers = useSelector(selectDrivers);
+  const { loading, message, status } = useSelector(selectSetDriverState);
+
   const origin = service.origin;
   const destiny = service.destiny;
   const mapRef = useRef();
 
   const [route, setRoute] = useState([]);
+  const [driverSelected, setDriverSelected] = useState({ _id: 0 });
 
   const markerOrigin = {
     latitude: origin.coordinates.lat,
@@ -43,6 +51,48 @@ const SelectDriver = ({ navigation }) => {
   const markerDestiny = {
     latitude: destiny.coordinates.lat,
     longitude: destiny.coordinates.lng,
+  };
+
+  /**
+   * resetNavigation to Service
+   */
+
+  const goToService = () =>
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: "RequestServiceStack",
+            params: {
+              screen: "ServiceInProcess",
+            },
+          },
+        ],
+      })
+    );
+
+  useEffect(() => {
+    if (status === "OK") {
+      dispatch(resetServiceMethodsMessage("setDriverState"));
+      goToService();
+    }
+  }, [status]);
+
+  const requestDriver = async () => {
+    if (driverSelected._id) {
+      dispatch(
+        setDriver({
+          serviceId: service._id,
+          body: {
+            driver: driverSelected._id,
+            price: driverSelected.price,
+          },
+        })
+      );
+    } else {
+      console.log("Selecciona un chamo");
+    }
   };
 
   useEffect(() => {
@@ -68,14 +118,17 @@ const SelectDriver = ({ navigation }) => {
   return (
     <SafeAreaView style={safeareaStyle.container__light}>
       <View style={headerStyle.container}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={{ marginRight: "15%" }}
+          onPress={() => navigation.goBack()}
+        >
           <FontAwesome name="arrow-left" size={24} color="#254A5A" />
         </TouchableOpacity>
-        <Text style={textStyle.header__text}>Dirección</Text>
+        <Text style={textStyle.header__text__left}>Seleccione un driver</Text>
       </View>
       <View style={styles.map__container}>
         <MapView style={styles.map} ref={mapRef} customMapStyle={mapStyle}>
-          {origin && destiny && (
+          {origin && destiny ? (
             <>
               <Marker
                 key="1"
@@ -93,7 +146,7 @@ const SelectDriver = ({ navigation }) => {
               >
                 <FontAwesome name="map-marker" size={32} color="#F2774B" />
               </Marker>
-              {route.length > 0 ? (
+              {route.length ? (
                 <Polyline
                   coordinates={route}
                   strokeColor="#254A5A"
@@ -101,44 +154,54 @@ const SelectDriver = ({ navigation }) => {
                 />
               ) : null}
             </>
-          )}
+          ) : null}
         </MapView>
       </View>
       <View style={styles.content__container}>
         <View style={styles.drivers__container}>
           <ScrollView>
-            {drivers.length &&
-              drivers.map((driver) => (
-                <TouchableOpacity
-                  style={styles.driver__button}
-                  key={driver._id}
-                >
-                  <View style={styles.driver__icon__container}>
-                    <Image
-                      style={cars[driver.carDetail[0].type].style}
-                      source={cars[driver.carDetail[0].type].icon}
-                    />
-                  </View>
-                  <View style={styles.driver__text__container}>
-                    <Text style={styles.driver__text} numberOfLines={1}>
-                      {driver.carDetail[0].type}
-                    </Text>
-                  </View>
-                  <View style={styles.price__text__container}>
-                    <Text style={styles.price__text} numberOfLines={1}>
-                      S/ {driver.price}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
+            {drivers.length
+              ? drivers.map((driver) => (
+                  <TouchableOpacity
+                    style={
+                      driver._id == driverSelected._id
+                        ? styles.driver__button__selected
+                        : styles.driver__button
+                    }
+                    key={driver._id}
+                    onPress={() => setDriverSelected(driver)}
+                  >
+                    <View style={styles.driver__icon__container}>
+                      <Image
+                        style={cars[driver.carDetail[0].type].style}
+                        source={cars[driver.carDetail[0].type].icon}
+                      />
+                    </View>
+                    <View style={styles.driver__text__container}>
+                      <Text style={styles.driver__text} numberOfLines={1}>
+                        {driver.carDetail[0].type}
+                      </Text>
+                    </View>
+                    <View style={styles.price__text__container}>
+                      <Text style={styles.price__text} numberOfLines={1}>
+                        S/ {driver.price}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              : null}
           </ScrollView>
         </View>
         <View style={styles.action__container}>
-          <TouchableOpacity style={primaryButtonStyle.container}>
-            <Text style={primaryButtonStyle.text__center}>Aceptar</Text>
+          <TouchableOpacity
+            style={primaryButtonStyle.container}
+            onPress={requestDriver}
+          >
+            <Text style={primaryButtonStyle.text__center}>Seleccionar</Text>
           </TouchableOpacity>
         </View>
       </View>
+      {loading && <Loading />}
     </SafeAreaView>
   );
 };

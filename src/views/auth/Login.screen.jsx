@@ -88,14 +88,17 @@ const Login = ({ navigation }) => {
         dispatch(resetUserMethodsMessage("getAccesTokenState"));
         dispatch(setIsAuth());
         goHome();
-      }, 3500);
+      }, 2500);
     }
+    return () => {};
   }, [dispatch, status]);
 
   useEffect(() => {
-    setTimeout(() => {
-      setFeedbackOpen(false);
-    }, 2000);
+    if (feedbackOpen) {
+      setTimeout(() => {
+        setFeedbackOpen(false);
+      }, 1000);
+    }
   }, [feedbackOpen]);
 
   const onSubmit = async (data) => {

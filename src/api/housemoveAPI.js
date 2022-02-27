@@ -57,8 +57,8 @@ const addAddress = async (data) => {
   return response;
 };
 
-const getAddresses = async (data, customerId) => {
-  const url = `${houseMoveAPI}/customers/${customerId}/address`;
+const getAddresses = async (data) => {
+  const url = `${houseMoveAPI}/customers/${data.customerId}/address`;
   const response = await consumer(url, "GET");
   return response;
 };
@@ -73,7 +73,7 @@ const requestService = async (data) => {
   return response;
 };
 
-const selectDriver = async (data, serviceId) => {
+const selectDriver = async (data) => {
   const url = `${houseMoveAPI}/services/${data.serviceId}/driver`;
   const response = await consumer(url, "PATCH", data.body);
   return response;

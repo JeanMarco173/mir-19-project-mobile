@@ -20,6 +20,12 @@ const styles = StyleSheet.create({
     marginHorizontal: "30%",
   },
 
+  header__text__left: {
+    color: "#254A5A",
+    fontSize: 24,
+    fontWeight: Platform.OS === "ios" ? "700" : "bold",
+  },
+
   sub__title: {
     color: "#276C91",
     fontSize: 18,

@@ -62,10 +62,6 @@ const Wellcome = ({ navigation }) => {
       }
     };
     getCredentials();
-    return () => {
-      token.abort();
-      user.abort();
-    };
   }, []);
 
   const initialAnitmation = {

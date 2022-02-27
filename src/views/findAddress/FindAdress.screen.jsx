@@ -12,8 +12,9 @@ import PlaceFinder from "../../components/placeFinder/PlaceFinder.jsx";
 import AddressCard from "../../components/addressCard/AddressCard.jsx";
 import AlertDialog from "../../components/alertDialog/AlertDialog.jsx";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setOrigin, setDestiny } from "../../store/service/service.slice.js";
+import { selecAddresses } from "../../store/user/user.slice.js";
 
 import styles from "./findadress.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";
@@ -21,6 +22,7 @@ import textStyle from "../../styles/text.styles.js";
 
 const FindAddress = ({ route, navigation }) => {
   const dispatch = useDispatch();
+  const addresses = useSelector(selecAddresses);
   const screenOrigin = route.params.origin;
   const { isOpen, onOpen, onClose } = useDisclose();
 
@@ -58,14 +60,27 @@ const FindAddress = ({ route, navigation }) => {
         <PlaceFinder setPlace={setAddress} />
       </View>
       <View style={styles.addresses__container}>
-        <Text style={textStyle.title__text__dark}>Mis direcciones</Text>
-        <ScrollView style={styles.addresses__scroll}>
-          <AddressCard
-            address={{ name: "Direccion" }}
-            selectAddress={setAddress}
-            theme="dark"
-          />
-        </ScrollView>
+        {addresses.length ? (
+          <>
+            <Text style={textStyle.title__text__dark}>Mis direcciones</Text>
+            <ScrollView style={styles.addresses__scroll}>
+              {addresses.map((address) => (
+                <AddressCard
+                  address={address}
+                  key={address._id}
+                  selectAddress={setAddress}
+                  theme="dark"
+                />
+              ))}
+            </ScrollView>
+          </>
+        ) : (
+          <TouchableOpacity style={styles.add__address__button}>
+            <Text style={styles.add__address__text}>
+              Agrega una dirección paran comenzar a realizar tus envíos
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
       <AlertDialog
         isOpen={isOpen}

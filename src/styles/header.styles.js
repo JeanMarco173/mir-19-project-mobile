@@ -8,6 +8,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+
+  container__logout: {
+    height: 60,
+    paddingHorizontal: 25,
+    paddingVertical: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 });
 
 export default styles;

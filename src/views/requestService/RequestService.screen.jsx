@@ -12,11 +12,15 @@ import {
 import { CommonActions } from "@react-navigation/native";
 import { useDisclose } from "native-base";
 import { FontAwesome } from "@expo/vector-icons";
+import AlertDialog from "../../components/alertDialog/AlertDialog.jsx";
+import Loading from "../../components/loading/Loading.jsx";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import FeedbackMessage from "../../components/feedback/FeedbackMessage.jsx";
 import moment from "moment";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
+  resetService,
   setDate,
   setHour,
   setDetail,
@@ -25,9 +29,7 @@ import {
   request,
   resetServiceMethodsMessage,
 } from "../../store/service/service.slice.js";
-import { logout, selectUser } from "../../store/user/user.slice.js";
-import AlertDialog from "../../components/alertDialog/AlertDialog.jsx";
-import Loading from "../../components/loading/Loading.jsx";
+import { selectUser } from "../../store/user/user.slice.js";
 
 import styles from "./requestservice.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";
@@ -49,6 +51,10 @@ const RequestServiceForm = ({ navigation }) => {
   const [isHourValid, setIsHourValid] = useState(null);
   const [pickerType, setPickerType] = useState("date");
 
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const feedbackType = "error";
+  const [feedbackMessage, setFeedbackMessage] = useState(message);
+
   /**
    * Set date to request
    */
@@ -62,6 +68,14 @@ const RequestServiceForm = ({ navigation }) => {
   useEffect(() => {
     dispatch(setDate(moment(datePicker).format("YYYY-MM-DD")));
   }, [datePicker]);
+
+  useEffect(() => {
+    if (feedbackOpen) {
+      setTimeout(() => {
+        setFeedbackOpen(false);
+      }, 3000);
+    }
+  }, [feedbackOpen]);
 
   /**
    * Set hour to request
@@ -78,9 +92,7 @@ const RequestServiceForm = ({ navigation }) => {
   }, [hourPicker]);
 
   useEffect(() => {
-    console.log("Holi");
     if (status === "OK") {
-      console.log("status", status);
       dispatch(resetServiceMethodsMessage("requestState"));
       navigation.navigate("SelectDriver");
     }
@@ -91,7 +103,7 @@ const RequestServiceForm = ({ navigation }) => {
    */
 
   const goToResume = () => {
-    if (origin && destiny && date && hour && detail) {
+    if (origin && destiny && date && hour && detail.length > 6) {
       dispatch(
         request({
           customer: user._id,
@@ -104,7 +116,11 @@ const RequestServiceForm = ({ navigation }) => {
         })
       );
     } else {
-      console.log("cuidado marico, no esta en orden");
+      setFeedbackOpen(true);
+      if (!origin || !destiny || !date || !hour || !detail)
+        setFeedbackMessage("Complete todos los campos");
+      else if (detail.length < 6)
+        setFeedbackMessage("Campo detalle debe tener 6 caracteres como mínimo");
     }
   };
 
@@ -112,7 +128,8 @@ const RequestServiceForm = ({ navigation }) => {
    * resetNavigation to home
    */
 
-  const goBack = () =>
+  const goBack = () => {
+    dispatch(resetService());
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
@@ -126,6 +143,7 @@ const RequestServiceForm = ({ navigation }) => {
         ],
       })
     );
+  };
 
   return (
     <SafeAreaView style={safeareaStyle.container__light}>
@@ -234,6 +252,11 @@ const RequestServiceForm = ({ navigation }) => {
                 onChangeText={(text) => dispatch(setDetail(text))}
               />
             </View>
+            <FeedbackMessage
+              type={feedbackType}
+              message={feedbackMessage}
+              isOpen={feedbackOpen}
+            />
           </ScrollView>
         </KeyboardAvoidingView>
         <View style={styles.action__container}>

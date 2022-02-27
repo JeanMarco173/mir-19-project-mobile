@@ -8,19 +8,10 @@ import {
 } from "react-native";
 
 import styles from "./shipmentcard.style.js";
-const vehiclesImageArray = [
-  { type: "van", uri: require("../../../assets/van.png") },
-  { type: "smallTruck", uri: require("../../../assets/small-truck.png") },
-  { type: "middleTruck", uri: require("../../../assets/middle-truck.png") },
-  { type: "bigTruck", uri: require("../../../assets/big-truck.png") },
-];
+import cars from "../../styles/cars.styles.js";
 
 const ShipmentCard = (props) => {
   const { date, price, vehicleType } = props;
-
-  const vehicle = vehiclesImageArray.filter(
-    (item) => item.type === vehicleType
-  );
 
   return (
     <TouchableOpacity style={styles.ship__container}>
@@ -36,7 +27,12 @@ const ShipmentCard = (props) => {
         </View>
       </View>
       <View style={styles.ship__icon__container}>
-        <Image style={styles.ship__icon} source={vehicle.uri} />
+        <View style={styles.ship__icon}>
+          <Image
+            style={cars[vehicleType].style}
+            source={cars[vehicleType].icon}
+          />
+        </View>
       </View>
     </TouchableOpacity>
   );

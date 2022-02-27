@@ -14,6 +14,7 @@ import Wellcome from "./src/views/wellcome/Wellcome.screen.jsx";
 import FindAddress from "./src/views/findAddress/FindAdress.screen.jsx";
 import RequestServiceForm from "./src/views/requestService/RequestService.screen.jsx";
 import SelectDriver from "./src/views/requestService/SelectDriver.jsx";
+import ServiceInProcess from "./src/views/service/Service.screen.jsx";
 
 import TabNavigator from "./src/navigation/tab.navigation.js";
 
@@ -31,6 +32,34 @@ function AuthStack() {
         name="SignUp"
         component={SignUp}
         options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function RequestServiceStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="RequestServiceForm"
+        component={RequestServiceForm}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SelectDriver"
+        component={SelectDriver}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ServiceInProcess"
+        component={ServiceInProcess}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="FindAddress"
+        component={FindAddress}
+        options={{ headerShown: false }}
+        initialParams={{ origin: "" }}
       />
     </Stack.Navigator>
   );
@@ -60,29 +89,6 @@ function ProtectedStack() {
           options={{ headerShown: false }}
         />
       )}
-    </Stack.Navigator>
-  );
-}
-
-function RequestServiceStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="RequestServiceForm"
-        component={RequestServiceForm}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="SelectDriver"
-        component={SelectDriver}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="FindAddress"
-        component={FindAddress}
-        options={{ headerShown: false }}
-        initialParams={{ origin: "" }}
-      />
     </Stack.Navigator>
   );
 }

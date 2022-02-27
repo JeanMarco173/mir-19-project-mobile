@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -9,6 +9,16 @@ import {
 } from "react-native";
 import ShipCard from "../../components/shipmentCard/ShipmentCard.jsx";
 import AddressCard from "../../components/addressCard/AddressCard.jsx";
+import Loading from "../../components/loading/Loading.jsx";
+
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selecAddresses,
+  selectUser,
+  getAddressesByUser,
+  selectGetAddressesByUserState,
+  resetServiceMethodsMessage,
+} from "../../store/user/user.slice.js";
 
 import styles from "./home.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";
@@ -16,7 +26,18 @@ import { primaryButtonStyle } from "../../styles/buttons.styles.js";
 import textStyle from "../../styles/text.styles.js";
 
 const Home = ({ navigation }) => {
-  const [addresses, setAddresses] = useState([]);
+  const dispatch = useDispatch();
+  const addresses = useSelector(selecAddresses);
+  const user = useSelector(selectUser);
+  const { loading } = useSelector(selectGetAddressesByUserState);
+
+  useEffect(() => {
+    const getAddresses = async () =>
+      dispatch(getAddressesByUser({ customerId: user._id }));
+    getAddresses();
+    return () =>
+      dispatch(resetServiceMethodsMessage("getAddressesByUserState"));
+  }, []);
 
   const goToRequestService = () => navigation.navigate("RequestServiceStack");
   return (
@@ -39,7 +60,7 @@ const Home = ({ navigation }) => {
           </View>
         </TouchableOpacity>
         <View style={styles.ship__container}>
-          <ShipCard date="22/02/2022" price="22.00" vehicleType="van" />
+          <ShipCard date="22/02/2022" price="22.00" vehicleType="Van" />
         </View>
         <View style={styles.request__ship__container}>
           <TouchableOpacity
@@ -58,7 +79,9 @@ const Home = ({ navigation }) => {
           <>
             <Text style={textStyle.title__text}>Mis direcciones</Text>
             <ScrollView style={styles.addresses__container}>
-              <AddressCard addressName="Dirección 1" />
+              {addresses.map((address) => (
+                <AddressCard address={address} key={address._id} />
+              ))}
             </ScrollView>
           </>
         ) : (
@@ -69,6 +92,7 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
         )}
       </View>
+      {loading && <Loading />}
     </SafeAreaView>
   );
 };

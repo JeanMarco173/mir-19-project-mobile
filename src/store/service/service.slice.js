@@ -81,9 +81,8 @@ const service = createSlice({
         }
 
         if (action.payload.status === "OK") {
-          state.requestState.message = "El driver fue asignado con éxito 🙂";
+          state.requestState.message = "El servicio se solicitó con éxito 🙂";
           state.requestState.status = "OK";
-          console.log(action.payload.data.drivers);
           state.service = action.payload.data.service;
           state.drivers = action.payload.data.drivers;
           return;
@@ -109,7 +108,7 @@ const service = createSlice({
         }
 
         if (action.payload.status === "OK") {
-          state.setDriverState.message = "El servicio se solicitó con éxito 🙂";
+          state.setDriverState.message = "El driver fue asignado con éxito 🙂";
           state.setDriverState.status = "OK";
           state.service = action.payload.data.service;
           state.drivers = [];
