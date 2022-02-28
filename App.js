@@ -4,7 +4,9 @@ import { store } from "./src/store/store.js";
 import { NativeBaseProvider } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import registerNNPushToken from "native-notify";
 
+import { notifyId, notifyToken } from "./config.js";
 import { useSelector } from "react-redux";
 import { selecIsAuth } from "./src/store/user/user.slice.js";
 
@@ -94,6 +96,8 @@ function ProtectedStack() {
 }
 
 function App() {
+  registerNNPushToken(notifyId, notifyToken);
+
   return (
     <NativeBaseProvider>
       <NavigationContainer>

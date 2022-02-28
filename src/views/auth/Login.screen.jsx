@@ -10,7 +10,9 @@ import Loading from "../../components/loading/Loading.jsx";
 import FeedbackMessage from "../../components/feedback/FeedbackMessage.jsx";
 import { FontAwesome } from "@expo/vector-icons";
 import { CommonActions } from "@react-navigation/native";
+import { registerIndieID } from "native-notify";
 
+import { notifyId, notifyToken } from "../../../config.js";
 import {
   setUserToStorage,
   setTokenToStorage,
@@ -79,6 +81,7 @@ const Login = ({ navigation }) => {
     const provideUserStorage = async () => await setUserToStorage(user);
     const provideTokenStorage = async () => await setTokenToStorage(token);
     if (status === "OK") {
+      registerIndieID(user._id, notifyId, notifyToken);
       setFeedbackType("sucees");
       setFeedbackOpen(true);
       setFeedbackMessage(message);

@@ -125,7 +125,9 @@ const ServiceInProcess = ({ navigation }) => {
         </View>
         <View style={styles.service__info__container}>
           <View style={styles.service__info}>
-            <Text style={styles.service__info__text}>{service.distance}</Text>
+            <Text style={styles.service__info__text}>
+              {service.distance} KM
+            </Text>
           </View>
           <View style={styles.service__info}>
             <Text style={styles.service__info__text}>S/. {service.price}</Text>

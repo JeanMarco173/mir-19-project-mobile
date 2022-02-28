@@ -58,6 +58,9 @@ const service = createSlice({
     resetService: (state, action) => {
       state.service = initialState;
     },
+    setServiceFromNotification: (state, action) => {
+      state.service = action.payload;
+    },
     resetServiceMethodsMessage(state, action) {
       state[action.payload].message = "";
       state[action.payload].status = "";
@@ -130,6 +133,7 @@ export const {
   setHour,
   setDetail,
   resetService,
+  setServiceFromNotification,
 } = service.actions;
 
 export const selectService = (state) => state.service.service;

@@ -208,7 +208,7 @@ const SignUp = ({ navigation }) => {
             style={primaryButtonStyle.container}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={primaryButtonStyle.text__center}>Siguiente</Text>
+            <Text style={primaryButtonStyle.text__center}>Registrarme</Text>
           </TouchableOpacity>
         </View>
       </View>

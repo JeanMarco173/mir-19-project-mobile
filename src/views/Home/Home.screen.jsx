@@ -11,13 +11,14 @@ import ShipCard from "../../components/shipmentCard/ShipmentCard.jsx";
 import AddressCard from "../../components/addressCard/AddressCard.jsx";
 import Loading from "../../components/loading/Loading.jsx";
 
+import actionNotifications from "../../utils/notifications/service.notifications.js";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selecAddresses,
   selectUser,
   getAddressesByUser,
   selectGetAddressesByUserState,
-  resetServiceMethodsMessage,
+  resetUserMethodsMessage,
 } from "../../store/user/user.slice.js";
 
 import styles from "./home.style.js";
@@ -31,12 +32,13 @@ const Home = ({ navigation }) => {
   const user = useSelector(selectUser);
   const { loading } = useSelector(selectGetAddressesByUserState);
 
+  actionNotifications(navigation, dispatch);
+
   useEffect(() => {
     const getAddresses = async () =>
       dispatch(getAddressesByUser({ customerId: user._id }));
     getAddresses();
-    return () =>
-      dispatch(resetServiceMethodsMessage("getAddressesByUserState"));
+    return () => dispatch(resetUserMethodsMessage("getAddressesByUserState"));
   }, []);
 
   const goToRequestService = () => navigation.navigate("RequestServiceStack");
