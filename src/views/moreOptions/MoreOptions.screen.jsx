@@ -7,14 +7,17 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { CommonActions } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import moment from "moment";
 
+import { uploadFile } from "../../utils/firebase/upload.js";
+import { useDispatch, useSelector } from "react-redux";
 import { clearStorage } from "../../utils/asyncStorage/manageAsyncStorage.js";
 import {
   resetUserMethodsMessage,
   selectUser,
   logout,
 } from "../../store/user/user.slice.js";
-import { useDispatch, useSelector } from "react-redux";
 
 import styles from "./moreoptions.style.js";
 import safeareaStyle from "../../styles/safearea.style.js";
@@ -45,6 +48,21 @@ const MoreOptions = ({ navigation }) => {
     goWellcome();
   };
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      const name = moment().unix();
+      const url = await uploadFile(result.uri, name);
+    }
+  };
+
   return (
     <SafeAreaView style={safeareaStyle.container}>
       <View style={headerStyle.container__logout}>
@@ -58,7 +76,10 @@ const MoreOptions = ({ navigation }) => {
       </View>
       <View style={styles.body}>
         <View style={styles.user__container}>
-          <TouchableOpacity style={styles.user__avatar__button}>
+          <TouchableOpacity
+            style={styles.user__avatar__button}
+            onPress={pickImage}
+          >
             <Image
               style={styles.user__avatar__photo}
               source={

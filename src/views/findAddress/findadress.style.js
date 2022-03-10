@@ -36,6 +36,18 @@ const styles = StyleSheet.create({
     maxHeight: "75%",
     marginTop: 25,
   },
+
+  add__address__button: {
+    height: 45,
+    justifyContent: "center",
+  },
+
+  add__address__text: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#276C91",
+    textAlign: "center",
+  },
 });
 
 export default styles;
